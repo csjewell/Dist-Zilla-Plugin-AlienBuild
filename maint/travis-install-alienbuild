@@ -1,0 +1,9 @@
+#!/bin/sh
+
+git clone --depth 2 git@github.com:plicease/Dist-Zilla-Plugin-AlienBuild.git /tmp/AlienBuild
+cd /tmp/AlienBuild
+
+dzil authordeps --missing | cpanm -n
+dzil listdeps   --missing | cpanm -n
+    
+dzil install
