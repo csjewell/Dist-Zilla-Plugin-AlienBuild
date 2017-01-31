@@ -9,6 +9,45 @@ use Path::Tiny qw( path );
 # ABSTRACT: Use Alien::Build with Dist::Zilla
 # VERSION
 
+=head1 SYNOPSIS
+
+ [AlienBuild]
+
+=head1 DESCRIPTION
+
+This L<Dist::Zilla> plugin is designed to help create L<Alien> modules using
+the L<alienfile> and L<Alien::Build> recipe system with L<Alien::Base>.  The
+intent is that you will maintain your L<alienfile> as you normally would,
+and this plugin will ensure the right prereqs are specified in the C<META.json>
+and other things that are easy to get not quite right.
+
+Specifically, this plugin:
+
+=over 4
+
+=item adds prereqs
+
+Adds the C<configure> requirements to your dist C<configure> requires.  It
+adds the C<any> requirements from your L<alienfile> to your dist C<build>
+requires.
+
+=item adjusts Makefile.PL
+
+Adjusts your C<Makefile.Pl> to use L<Alien::Build::MM>.  In the future C<Build.PL>
+may be supported.
+
+=item turn on dynamic prereqs
+
+Which are used by most L<Alien::Build> based L<Alien> distributions.
+
+=back
+
+=head1 SEE ALSO
+
+L<Alien::Build>, L<alienfile>, L<Alien::Base>, L<Alien::Build::MM>
+
+=cut
+
 with 'Dist::Zilla::Role::FileMunger';
 with 'Dist::Zilla::Role::MetaProvider';
 with 'Dist::Zilla::Role::PrereqSource';

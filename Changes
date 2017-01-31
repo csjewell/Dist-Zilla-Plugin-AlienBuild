@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - Added documentation
+  - Require Alien::Build 0.02
 
 0.01      2017-01-30 22:32:38 -0500
   - initial version
