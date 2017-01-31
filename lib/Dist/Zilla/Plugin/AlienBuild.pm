@@ -2,6 +2,7 @@ package Dist::Zilla::Plugin::AlienBuild;
 
 use strict;
 use warnings;
+use 5.014;
 use Moose;
 use List::Util qw( first );
 use Path::Tiny qw( path );
