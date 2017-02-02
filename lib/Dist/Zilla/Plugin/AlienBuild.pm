@@ -53,6 +53,17 @@ with 'Dist::Zilla::Role::FileMunger';
 with 'Dist::Zilla::Role::MetaProvider';
 with 'Dist::Zilla::Role::PrereqSource';
 
+has _installer => (
+  is      => 'ro',
+  lazy    => 1,
+  default => sub {
+    my($self) = @_;
+    my $name = first { /^(Build|Makefile)\.PL$/ } map { $_->name } @{ $self->zilla->files };
+    $self->log_fatal('Unable to find Makefile.PL or Build.PL') unless $name;
+    $name;
+  },
+);
+
 sub register_prereqs
 {
   my($self) = @_;
@@ -64,20 +75,32 @@ sub register_prereqs
     $alienfile->spew($file->content);
     my $build = Alien::Build->load($alienfile);
 
-    my $ab_version = '0.02';
+    if($self->_installer eq 'Makefile.PL')
+    {
+      $self->zilla->register_prereqs(
+        { phase => $_ },
+        'Alien::Build::MM' => '0.04',
+        'ExtUtils::MakeMaker' => '6.52',
+      ) for qw( configure build );
+    }
+    else
+    {
+      $self->zilla->register_prereqs(
+        { phase => $_ },
+        'Alien::Build::MB' => '0.01',
+      ) for qw( configure build );
+    }
 
     # Configure requires...
     $self->zilla->register_prereqs(
       { phase => 'configure' },
-      'Alien::Build::MM' => $ab_version,
-      'ExtUtils::MakeMaker' => '6.52',
       %{ $build->requires('configure') },
     );
     
     # Build requires...
+    $DB::single = 1;
     $self->zilla->register_prereqs(
       { phase => 'build' },
-      'Alien::Build::MM' => $ab_version,
       %{ $build->requires('any') },
     );
   }
@@ -107,8 +130,9 @@ sub munge_files
 {
   my($self) = @_;
 
-  if(my $file = first { $_->name eq 'Makefile.PL' } @{ $self->zilla->files })
+  if($self->_installer eq 'Makefile.PL')
   {
+    my $file = first { $_->name eq 'Makefile.PL' } @{ $self->zilla->files };
     my $content = $file->content;
  
     my $ok = $content =~ s/(unless \( eval \{ ExtUtils::MakeMaker)/"$comment_begin$mm_code_prereqs$comment_end\n\n$1"/e;
@@ -120,10 +144,26 @@ sub munge_files
     $file->content($content);
   }
   
-  elsif($file = first { $_->name eq 'Makefile.PL' } @{ $self->zilla->files })
+  elsif($self->_installer eq 'Build.PL')
   {
-    # TODO: support MB
-    $self->log_fatal('Build.PL not (yet) supported');
+    my $plugin = first { $_->isa('Dist::Zilla::Plugin::ModuleBuild') } @{ $self->zilla->plugins };
+    $self->log_fatal("unable to find [ModuleBuild] plugin") unless $plugin;
+    if($plugin->mb_class eq 'Module::Build')
+    {
+      $self->log('setting mb_class to Alien::Build::MB');
+      $plugin->mb_class('Alien::Build::MB');
+    }
+    else
+    {
+      if(eval { $plugin->mb_class->isa('Alien::Build::MB') })
+      {
+        $self->log('mb_class is already a Alien::Build::MB');
+      }
+      else
+      {
+        $self->log_fatal("@{[ $plugin->mb_class ]} is not an Alien::Build::MB");
+      }
+    }
   }
   
   else
@@ -136,6 +176,5 @@ sub metadata {
   my($self) = @_;
   { dynamic_config => 1 };
 }
-
 
 1;

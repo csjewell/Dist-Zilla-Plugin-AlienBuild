@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - Add support for Module::Build via Alien::Build::MB
 
 0.03      2017-01-31 16:48:00 -0500
   - Explicitly require Perl 5.14.
