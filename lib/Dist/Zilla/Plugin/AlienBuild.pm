@@ -34,8 +34,13 @@ requires.
 
 =item adjusts Makefile.PL
 
-Adjusts your C<Makefile.Pl> to use L<Alien::Build::MM>.  In the future C<Build.PL>
-may be supported.
+Adjusts your C<Makefile.Pl> to use L<Alien::Build::MM>.  If you are using
+L<ExtUtils::MakeMaker>.
+
+=item sets the mb_class for Build.PL
+
+sets mb_class to L<Alien::Build::MB> on the L<Dist::Zilla::Plugin::ModuleBuild>
+plugin.  If you are using L<Module::Build>.
 
 =item turn on dynamic prereqs
 
@@ -45,7 +50,7 @@ Which are used by most L<Alien::Build> based L<Alien> distributions.
 
 =head1 SEE ALSO
 
-L<Alien::Build>, L<alienfile>, L<Alien::Base>, L<Alien::Build::MM>
+L<Alien::Build>, L<alienfile>, L<Alien::Base>, L<Alien::Build::MM>, L<Alien::Build::MB>
 
 =cut
 
