@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - require Alien::Build 0.08
 
 0.05      2017-02-04 11:24:04 -0500
   - Updated documentation for MB support

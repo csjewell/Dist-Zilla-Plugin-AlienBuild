@@ -84,7 +84,7 @@ sub register_prereqs
     {
       $self->zilla->register_prereqs(
         { phase => $_ },
-        'Alien::Build::MM' => '0.07',
+        'Alien::Build::MM' => '0.08',
         'ExtUtils::MakeMaker' => '6.52',
       ) for qw( configure build );
     }
