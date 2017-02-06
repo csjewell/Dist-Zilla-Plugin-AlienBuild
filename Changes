@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - Make Alien::Build a configure and build require
+    in addition to Alien::Build::MM (or ::MB)
 
 0.06      2017-02-04 11:36:45 -0500
   - require Alien::Build 0.08

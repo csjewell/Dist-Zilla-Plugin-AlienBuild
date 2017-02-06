@@ -80,11 +80,13 @@ sub register_prereqs
     $alienfile->spew($file->content);
     my $build = Alien::Build->load($alienfile);
 
+    my $ab_version = '0.10';
+
     if($self->_installer eq 'Makefile.PL')
     {
       $self->zilla->register_prereqs(
         { phase => $_ },
-        'Alien::Build::MM' => '0.08',
+        'Alien::Build::MM' => $ab_version,
         'ExtUtils::MakeMaker' => '6.52',
       ) for qw( configure build );
     }
@@ -99,13 +101,14 @@ sub register_prereqs
     # Configure requires...
     $self->zilla->register_prereqs(
       { phase => 'configure' },
+      'Alien::Build' => $ab_version,
       %{ $build->requires('configure') },
     );
     
     # Build requires...
-    $DB::single = 1;
     $self->zilla->register_prereqs(
       { phase => 'build' },
+      'Alien::Build' => $ab_version,
       %{ $build->requires('any') },
     );
   }
