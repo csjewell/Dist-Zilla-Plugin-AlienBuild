@@ -82,7 +82,6 @@ sub register_prereqs
     {
       if(defined $prereqs->{$phase}->{$type}->{'Alien::Base'})
       {
-        $self->zilla->prereqs->requirements_for($phase, $type)->clear_requirement('Alien::Base');
         $self->zilla->register_prereqs({
           type => $type,
           phase => $phase,
