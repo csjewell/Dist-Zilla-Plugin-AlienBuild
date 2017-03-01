@@ -97,7 +97,7 @@ sub register_prereqs
     $alienfile->spew($file->content);
     my $build = Alien::Build->load($alienfile);
 
-    my $ab_version = '0.15';
+    my $ab_version = '0.19';
 
     if($self->_installer eq 'Makefile.PL')
     {
