@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.10      2017-03-01 11:38:06 +1100
   - If Alien::Base is a prereq make it 0.036 at minimum as
     that is the first version compatible with Alien::Build
   - require Alien::Build 0.19 for very minor bug fixes
