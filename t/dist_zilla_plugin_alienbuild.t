@@ -51,7 +51,8 @@ subtest 'mm' => sub {
     $meta->{prereqs}->{build}->{requires},
     hash {
       field 'Alien::Build::MM' => T();
-      field 'Foo::Build' => '0.01';
+      field 'Foo::Build'       => '0.01';
+      field 'Alien::Base'      => DNE();
       etc;
     },
     'build prereqs',
@@ -120,6 +121,38 @@ subtest 'mb' => sub {
   
 };
 
+
+subtest 'req alien::base' => sub {
+
+  my $tzil = Builder->from_config({ dist_root => 'corpus/Alien-Foo1' }, {
+    add_files => {
+      'source/dist.ini' => simple_ini(
+        { name => 'Alien-Foo1' },
+        [ 'GatherDir'  => {} ],
+        [ 'MakeMaker'  => {} ],
+        [ 'MetaJSON'   => {} ],
+        [ 'Prereqs'    => { 'Alien::Base'  => 0 } ],
+        [ 'AlienBuild' => {} ],
+      ),
+    },
+  });
+  
+  $tzil->build;
+
+  my $meta = decode_json((first { $_->name eq 'META.json' } @{ $tzil->files })->content);
+
+  #use YAML ();
+  #note YAML::Dump($meta);
+
+  is(
+    $meta->{prereqs}->{runtime}->{requires},
+    hash {
+      field 'Alien::Base'      => '0.036';
+      etc;
+    },
+    'build prereqs',
+  );
+};
 
 done_testing;
 

@@ -73,6 +73,24 @@ sub register_prereqs
 {
   my($self) = @_;
 
+  my $prereqs = $self->zilla->prereqs->as_string_hash;
+
+  $DB::single = 1;  
+  foreach my $phase (keys %$prereqs)
+  {
+    foreach my $type (keys %{ $prereqs->{$phase} })
+    {
+      if(defined $prereqs->{$phase}->{$type}->{'Alien::Base'})
+      {
+        $self->zilla->prereqs->requirements_for($phase, $type)->clear_requirement('Alien::Base');
+        $self->zilla->register_prereqs({
+          type => $type,
+          phase => $phase,
+        }, 'Alien::Base' => '0.036' );
+      }
+    }
+  }
+
   if(my $file = first { $_->name eq 'alienfile' } @{ $self->zilla->files })
   {
     require Alien::Build;
