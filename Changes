@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.11      2017-03-10 15:08:52 -0500
   - Require Alien::Build 0.25 and Alien::Build 0.038
 
 0.10      2017-03-01 11:38:06 +1100
