@@ -147,7 +147,7 @@ subtest 'req alien::base' => sub {
   is(
     $meta->{prereqs}->{runtime}->{requires},
     hash {
-      field 'Alien::Base'      => '0.036';
+      field 'Alien::Base'      => '0.038';
       etc;
     },
     'build prereqs',

@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - Require Alien::Build 0.25 and Alien::Build 0.038
 
 0.10      2017-03-01 11:38:06 +1100
   - If Alien::Base is a prereq make it 0.036 at minimum as

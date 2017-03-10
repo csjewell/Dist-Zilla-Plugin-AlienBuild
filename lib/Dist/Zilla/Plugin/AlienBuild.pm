@@ -85,7 +85,7 @@ sub register_prereqs
         $self->zilla->register_prereqs({
           type => $type,
           phase => $phase,
-        }, 'Alien::Base' => '0.036' );
+        }, 'Alien::Base' => '0.038' );
       }
     }
   }
@@ -97,7 +97,7 @@ sub register_prereqs
     $alienfile->spew($file->content);
     my $build = Alien::Build->load($alienfile);
 
-    my $ab_version = '0.19';
+    my $ab_version = '0.25';
 
     if($self->_installer eq 'Makefile.PL')
     {
