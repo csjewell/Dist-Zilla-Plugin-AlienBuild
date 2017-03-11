@@ -75,7 +75,6 @@ sub register_prereqs
 
   my $prereqs = $self->zilla->prereqs->as_string_hash;
 
-  $DB::single = 1;  
   foreach my $phase (keys %$prereqs)
   {
     foreach my $type (keys %{ $prereqs->{$phase} })
