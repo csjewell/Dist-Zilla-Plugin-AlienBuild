@@ -34,7 +34,7 @@ requires.
 
 =item adjusts Makefile.PL
 
-Adjusts your C<Makefile.Pl> to use L<Alien::Build::MM>.  If you are using
+Adjusts your C<Makefile.PL> to use L<Alien::Build::MM>.  If you are using
 L<ExtUtils::MakeMaker>.
 
 =item sets the mb_class for Build.PL
