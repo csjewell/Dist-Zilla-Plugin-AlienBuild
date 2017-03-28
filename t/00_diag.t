@@ -11,10 +11,12 @@ my $post_diag;
 
 $modules{$_} = $_ for qw(
   Alien::Build
+  Data::Section
   Dist::Zilla
   ExtUtils::MakeMaker
   Moose
   Path::Tiny
+  Sub::Exporter::ForMethods
   Test2::Suite
   Test::More
 );

@@ -1,7 +1,5 @@
 package Dist::Zilla::Plugin::AlienBuild;
 
-use strict;
-use warnings;
 use 5.014;
 use Moose;
 use List::Util qw( first );
@@ -50,7 +48,8 @@ Which are used by most L<Alien::Build> based L<Alien> distributions.
 
 =head1 SEE ALSO
 
-L<Alien::Build>, L<alienfile>, L<Alien::Base>, L<Alien::Build::MM>, L<Alien::Build::MB>
+L<Alien::Build>, L<alienfile>, L<Alien::Base>, L<Alien::Build::MM>, L<Alien::Build::MB>,
+L<Dist::Zilla::Plugin::AlienBase::Doc>
 
 =cut
 
@@ -200,5 +199,7 @@ sub metadata {
   my($self) = @_;
   { dynamic_config => 1 };
 }
+
+__PACKAGE__->meta->make_immutable;
 
 1;

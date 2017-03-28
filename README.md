@@ -24,7 +24,7 @@ Specifically, this plugin:
 
 - adjusts Makefile.PL
 
-    Adjusts your `Makefile.Pl` to use [Alien::Build::MM](https://metacpan.org/pod/Alien::Build::MM).  If you are using
+    Adjusts your `Makefile.PL` to use [Alien::Build::MM](https://metacpan.org/pod/Alien::Build::MM).  If you are using
     [ExtUtils::MakeMaker](https://metacpan.org/pod/ExtUtils::MakeMaker).
 
 - sets the mb\_class for Build.PL
@@ -38,7 +38,8 @@ Specifically, this plugin:
 
 # SEE ALSO
 
-[Alien::Build](https://metacpan.org/pod/Alien::Build), [alienfile](https://metacpan.org/pod/alienfile), [Alien::Base](https://metacpan.org/pod/Alien::Base), [Alien::Build::MM](https://metacpan.org/pod/Alien::Build::MM), [Alien::Build::MB](https://metacpan.org/pod/Alien::Build::MB)
+[Alien::Build](https://metacpan.org/pod/Alien::Build), [alienfile](https://metacpan.org/pod/alienfile), [Alien::Base](https://metacpan.org/pod/Alien::Base), [Alien::Build::MM](https://metacpan.org/pod/Alien::Build::MM), [Alien::Build::MB](https://metacpan.org/pod/Alien::Build::MB),
+[Dist::Zilla::Plugin::AlienBase::Doc](https://metacpan.org/pod/Dist::Zilla::Plugin::AlienBase::Doc)
 
 # AUTHOR
 
