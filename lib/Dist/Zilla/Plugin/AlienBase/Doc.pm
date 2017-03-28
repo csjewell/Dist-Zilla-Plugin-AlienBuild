@@ -71,6 +71,18 @@ has class_name => (
   },
 );
 
+=head2 min_version
+
+The minimum version to suggest using as a prereq.
+
+=cut
+
+has min_version => (
+  is      => 'ro',
+  isa     => 'Str',
+  default => '0',
+);
+
 =head2 type
 
 Types of the L<Alien>.  This can be specified multiple times.  Valid types:
@@ -163,8 +175,10 @@ sub render_synopsis
     
     $str .= "\n\n";
     $str .= $self->fill_in_string($template, {
-      class => $self->class_name,
-      name  => $self->name,
+      class      => $self->class_name,
+      name       => $self->name,
+      version    => $self->min_version,
+      optversion => $self->min_version ? " @{[ $self->min_version ]}" : '',
     });
   }
   
@@ -185,8 +199,10 @@ sub render_description
   my $str = "\n";
   
   $str .= $self->fill_in_string($template, {
-    class => $self->class_name,
-    name  => $self->name,
+    class      => $self->class_name,
+    name       => $self->name,
+    version    => $self->min_version,
+    optversion => $self->min_version ? " @{[ $self->min_version ]}" : '',
   });
   
   $str .= "\n\n";
@@ -266,6 +282,10 @@ In your Build.PL:
  use {{ $class }};
  my $builder = Module::Build->new(
    ...
+   configure_requires => {
+     '{{ $class }}' => '{{ $version }}',
+     ...
+   },
    extra_compiler_flags => {{ $class }}->cflags,
    extra_linker_flags   => {{ $class }}->libs,
    ...
@@ -281,6 +301,9 @@ In your Makefile.PL:
  
  WriteMakefile(
    ...
+   CONFIGURE_REQUIRES => {
+     '{{ $class }}' => '{{ $version }}',
+   },
    CCFLAGS => {{ $class }}->cflags . " $Config{ccflags",
    LIBS    => [ {{ $class }}->libs ],
    ...
@@ -290,7 +313,7 @@ __[ __SYNOPSIS_FFI__ ]__
 In your L<FFI::Platypus> script or module:
 
  use FFI::Platypus;
- use {{ $class }};
+ use {{ $class }}{{ $optversion }};
  
  my $ffi = FFI::Platypus->new(
    lib => [ {{ $class }}->dynamic_libs ],
@@ -299,7 +322,7 @@ In your L<FFI::Platypus> script or module:
 __[ __SYNOPSIS_TOOL__ ]__
 In your script or module:
 
- use {{ $class }};
+ use {{ $class }}{{ $optversion }};
  use Env qw( @PATH );
  
  unshift @ENV, {{ $class }};
