@@ -304,7 +304,7 @@ In your Makefile.PL:
    CONFIGURE_REQUIRES => {
      '{{ $class }}' => '{{ $version }}',
    },
-   CCFLAGS => {{ $class }}->cflags . " $Config{ccflags",
+   CCFLAGS => {{ $class }}->cflags . " $Config{ccflags}",
    LIBS    => [ {{ $class }}->libs ],
    ...
  );
