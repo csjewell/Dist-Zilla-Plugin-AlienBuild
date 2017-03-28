@@ -325,7 +325,7 @@ In your script or module:
  use {{ $class }}{{ $optversion }};
  use Env qw( @PATH );
  
- unshift @ENV, {{ $class }};
+ unshift @ENV, {{ $class }}->bin_dir;
 
 __[ __DESCRIPTION__ ]__
 =head1 DESCRIPTION
