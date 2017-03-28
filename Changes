@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - Fix some typos
+  - Bump prereq for Alien::Build to 0.32
 
 0.15      2017-03-28 13:17:04 -0400
   - Include prereqs in documentation for Buid.PL and Makefile.PL
