@@ -109,7 +109,7 @@ sub register_prereqs
     {
       $self->zilla->register_prereqs(
         { phase => $_ },
-        'Alien::Build::MB' => '0.01',
+        'Alien::Build::MB' => '0.02',
       ) for qw( configure build );
     }
 
