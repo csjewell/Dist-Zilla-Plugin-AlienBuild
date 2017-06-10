@@ -97,14 +97,9 @@ sub register_prereqs
 
     my $ab_version = '0.32';
 
-    foreach my $hook (qw( build_ffi gather_ffi ))
+    foreach my $hook (qw( build_ffi gather_ffi patch_ffi ))
     {
-      $ab_version = '0.38';
-    }
-
-    foreach my $hook (qw( patch_ffi ))
-    {
-      $ab_version = '0.39';
+      $ab_version = '0.40';
     }
 
     if($self->_installer eq 'Makefile.PL')
