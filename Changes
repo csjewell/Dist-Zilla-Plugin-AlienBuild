@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - Fix support for patch_ffi hook
 
 0.17      2017-06-10 06:33:36 -0400
   - Add support for _ffi hooks
