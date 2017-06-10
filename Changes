@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.18      2017-06-10 06:42:34 -0400
   - Fix support for patch_ffi hook
 
 0.17      2017-06-10 06:33:36 -0400
