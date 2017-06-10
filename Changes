@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.19      2017-06-10 13:33:21 -0400
   - Tweak requirements to handle recent deprecations
 
 0.18      2017-06-10 06:42:34 -0400
