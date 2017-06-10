@@ -97,6 +97,11 @@ sub register_prereqs
 
     my $ab_version = '0.32';
 
+    foreach my $hook (qw( build_ffi gather_ffi patch_ffi ))
+    {
+      $ab_version = '0.38';
+    }
+
     if($self->_installer eq 'Makefile.PL')
     {
       $self->zilla->register_prereqs(

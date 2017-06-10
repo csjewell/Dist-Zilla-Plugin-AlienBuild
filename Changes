@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - Add support for _ffi hooks
 
 0.16      2017-03-28 14:18:44 -0400
   - Fix some typos
