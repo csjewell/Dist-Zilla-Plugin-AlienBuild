@@ -99,7 +99,11 @@ sub register_prereqs
 
     foreach my $hook (qw( build_ffi gather_ffi patch_ffi ))
     {
-      $ab_version = '0.40';
+      if($build->meta->has_hook($hook))
+      {
+        $ab_version = '0.40';
+        last;
+      }
     }
 
     if($self->_installer eq 'Makefile.PL')
