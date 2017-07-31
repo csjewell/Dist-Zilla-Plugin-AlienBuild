@@ -4,6 +4,7 @@ use 5.014;
 use Moose;
 use List::Util qw( first );
 use Path::Tiny qw( path );
+use Capture::Tiny qw( capture );
 
 # ABSTRACT: Use Alien::Build with Dist::Zilla
 # VERSION
@@ -93,7 +94,7 @@ sub register_prereqs
     require Alien::Build;
     my $alienfile = Path::Tiny->tempfile;
     $alienfile->spew($file->content);
-    my $build = Alien::Build->load($alienfile);
+    my(undef, undef, $build) = capture { Alien::Build->load($alienfile) };
 
     my $ab_version = '0.32';
 
