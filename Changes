@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - Fix important typo in AlienBase::Doc
 
 0.21      2017-07-31 09:02:01 -0400
   - Swallow diagnostic causing travis build failures
