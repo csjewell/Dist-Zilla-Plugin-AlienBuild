@@ -244,8 +244,13 @@ sub metadata {
   if($self->alienfile_meta)
   {
     $meta{x_alienfile} = {
+      dzil_plugin => $Dist::Zilla::Plugin::AlienBuild::VERSION || 'dev',
       requires => {
-        map { $_ => $self->_build->requires($_) } qw( share system )
+        map {
+          my %reqs = %{ $self->_build->requires($_) };
+          $reqs{$_} = "$reqs{$_}" for keys %reqs;
+          $_ => \%reqs;
+        } qw( share system )
       },
     }
   }
