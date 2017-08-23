@@ -55,7 +55,7 @@ Unless you turn this feature off using C<alienfile_meta> below.
 
 =head2 alienfile_meta
 
-As of version 0.22, this plugin adds a special C<x_alienfile> metadata to your
+As of version 0.23, this plugin adds a special C<x_alienfile> metadata to your
 C<META.json> or C<META.yml>.  This contains the C<share> and C<system> prereqs
 based on your alienfile.  This may be useful for one day searching for Aliens
 which use another specific Alien during their build.  Note that by their nature,

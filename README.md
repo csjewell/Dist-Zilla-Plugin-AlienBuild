@@ -36,6 +36,23 @@ Specifically, this plugin:
 
     Which are used by most [Alien::Build](https://metacpan.org/pod/Alien::Build) based [Alien](https://metacpan.org/pod/Alien) distributions.
 
+- sets x\_alienfile meta
+
+    Unless you turn this feature off using `alienfile_meta` below.
+
+# PROPERTIES
+
+## alienfile\_meta
+
+As of version 0.23, this plugin adds a special `x_alienfile` metadata to your
+`META.json` or `META.yml`.  This contains the `share` and `system` prereqs
+based on your alienfile.  This may be useful for one day searching for Aliens
+which use another specific Alien during their build.  Note that by their nature,
+`share` and `system` prereqs are dynamic, so on some platforms they may
+actually be different.
+
+This is on by default.  You can turn this off by setting this property to `0`.
+
 # SEE ALSO
 
 [Alien::Build](https://metacpan.org/pod/Alien::Build), [alienfile](https://metacpan.org/pod/alienfile), [Alien::Base](https://metacpan.org/pod/Alien::Base), [Alien::Build::MM](https://metacpan.org/pod/Alien::Build::MM), [Alien::Build::MB](https://metacpan.org/pod/Alien::Build::MB),
