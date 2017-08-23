@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - Add x_alienfile meta
+  - Add alienfile_meta property
 
 0.22      2017-08-03 17:35:48 -0400
   - Fix important typo in AlienBase::Doc
