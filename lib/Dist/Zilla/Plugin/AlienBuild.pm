@@ -244,7 +244,7 @@ sub metadata {
   if($self->alienfile_meta)
   {
     $meta{x_alienfile} = {
-      dzil_plugin => $Dist::Zilla::Plugin::AlienBuild::VERSION || 'dev',
+      generated_by => "@{[ __PACKAGE__ ]} version @{[ __PACKAGE__->VERSION || 'dev' ]}",
       requires => {
         map {
           my %reqs = %{ $self->_build->requires($_) };
