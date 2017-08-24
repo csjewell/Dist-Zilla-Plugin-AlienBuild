@@ -189,8 +189,8 @@ sub MY::postamble {
 }
 EOF2
 
-my $comment_begin  = "# BEGIN code inserted by Dist::Zilla::Plugin::AlienBuild\n";
-my $comment_end    = "# END code inserted by Dist::Zilla::Plugin::AlienBuild\n";
+my $comment_begin  = "# BEGIN code inserted by @{[ __PACKAGE__ ]}\n";
+my $comment_end    = "# END code inserted by @{[ __PACKAGE__ ]}\n";
 
 sub munge_files
 {

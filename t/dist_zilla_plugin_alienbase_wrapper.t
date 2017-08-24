@@ -51,7 +51,7 @@ subtest 'eumm' => sub {
 
     note $file->content;
 
-    my($code) = $file->content =~ /(# BEGIN.*# END code inserted by Dist::Zilla::Plugin::AlienBuild)/s;
+    my($code) = $file->content =~ /(# BEGIN.*# END code inserted by Dist::Zilla::Plugin::AlienBase::Wrapper)/s;
     
     my @args_import;
     my @args_mm_args;
@@ -110,7 +110,7 @@ subtest 'mb' => sub {
 
     note $file->content;
     
-    my($code) = $file->content =~ /(# BEGIN.*# END code inserted by Dist::Zilla::Plugin::AlienBuild)/s;
+    my($code) = $file->content =~ /(# BEGIN.*# END code inserted by Dist::Zilla::Plugin::AlienBase::Wrapper)/s;
     
     my @args_import;
     my @args_mb_args;

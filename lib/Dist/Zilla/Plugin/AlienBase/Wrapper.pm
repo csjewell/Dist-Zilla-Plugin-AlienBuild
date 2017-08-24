@@ -62,8 +62,8 @@ to specify a minimum version requirement.  (Example C<Alien::Libarchive3@0.28>).
     ($self->$orig, 'alien');
   };
 
-  my $comment_begin  = "# BEGIN code inserted by Dist::Zilla::Plugin::AlienBuild\n";
-  my $comment_end    = "# END code inserted by Dist::Zilla::Plugin::AlienBuild\n";
+  my $comment_begin  = "# BEGIN code inserted by @{[ __PACKAGE__ ]}\n";
+  my $comment_end    = "# END code inserted by @{[ __PACKAGE__ ]}\n";
 
   sub register_prereqs
   {
