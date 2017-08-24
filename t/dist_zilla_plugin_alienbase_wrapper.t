@@ -6,7 +6,7 @@ use List::Util qw( first );
 use JSON::MaybeXS qw( decode_json );
 use Alien::Base::Wrapper 1.02;
 
-subtest 'Makefile.PL' => sub {
+subtest 'eumm' => sub {
 
   my $tzil = Builder->from_config({ dist_root => 'corpus/Foo-XS' }, {
     add_files => {
@@ -49,9 +49,9 @@ subtest 'Makefile.PL' => sub {
     
     ok $file, 'has a Makefile.PL';
 
+    note $file->content;
+
     my($code) = $file->content =~ /(# BEGIN.*# END code inserted by Dist::Zilla::Plugin::AlienBuild)/s;
-    
-    note $code;
     
     my @args_import;
     my @args_mm_args;
@@ -76,10 +76,69 @@ subtest 'Makefile.PL' => sub {
     is $@, '', 'code does not die';
     diag "error = $@" if $@;
     
-    is( \@args_import, [ qw( Alien::Base::Wrapper Alien::libfoo1 Alien::libfoo2 !export ) ], 'import arguments'),;
-    is( \@args_mm_args, [ qw( Alien::Base::Wrapper ) ], 'mm_args arguments');
-    is( \%WriteMakefileArgs, { foo => 'bar' }, 'mm_args return value');
+    is( \@args_import,       [ qw( Alien::Base::Wrapper Alien::libfoo1 Alien::libfoo2 !export ) ], 'import arguments'     );
+    is( \@args_mm_args,      [ qw( Alien::Base::Wrapper ) ],                                       'mm_args arguments'    );
+    is( \%WriteMakefileArgs, { foo => 'bar' },                                                     'mm_args return value' );
     
+  };
+
+};
+
+subtest 'mb' => sub {
+
+  my $tzil = Builder->from_config({ dist_root => 'corpus/Foo-XS' }, {
+    add_files => {
+      'source/dist.ini' => simple_ini(
+        { name => 'Foo-XS' },
+        [ 'GatherDir'  => {} ],
+        [ 'ModuleBuild' => {} ],
+        [ 'MetaJSON'   => {} ],
+        [ 'AlienBase::Wrapper' => {
+            alien => [ 'Alien::libfoo1@1.23', 'Alien::libfoo2' ],
+        } ],
+      ),
+    },
+  });
+
+  $tzil->build;
+
+  subtest 'installer' => sub {
+
+    my $file = first { $_->name eq 'Build.PL' } @{ $tzil->files };
+    
+    ok $file, 'has a Build.PL';
+
+    note $file->content;
+    
+    my($code) = $file->content =~ /(# BEGIN.*# END code inserted by Dist::Zilla::Plugin::AlienBuild)/s;
+    
+    my @args_import;
+    my @args_mb_args;
+    
+    my $mock = Test2::Mock->new(
+      class => 'Alien::Base::Wrapper',
+      override => [
+        import => sub {
+          @args_import = @_;
+        },
+        mb_args => sub {
+          diag "here";
+          @args_mb_args = @_;
+          ( foo => 'bar' );
+        },
+      ],
+    );
+
+    my %module_build_args;
+    eval $code;
+    
+    is $@, '', 'code does not die';
+    diag "error = $@" if $@;
+    
+    is( \@args_import,       [ qw( Alien::Base::Wrapper Alien::libfoo1 Alien::libfoo2 !export ) ], 'import arguments'     );
+    is( \@args_mb_args,      [ qw( Alien::Base::Wrapper ) ],                                       'mb_args arguments'    );
+    is( \%module_build_args, { foo => 'bar' },                                                     'mb_args return value' );
+  
   };
 
 };

@@ -10,15 +10,22 @@ my %modules;
 my $post_diag;
 
 $modules{$_} = $_ for qw(
+  Alien::Base::Wrapper
   Alien::Build
   Capture::Tiny
+  Cpanel::JSON::XS
   Data::Section
   Dist::Zilla
   ExtUtils::MakeMaker
+  JSON::MaybeXS
+  JSON::PP
+  JSON::XS
   Moose
   Path::Tiny
   Sub::Exporter::ForMethods
+  Test2::Mock
   Test2::V0
+  YAML
 );
 
 

@@ -10,13 +10,30 @@ package Dist::Zilla::Plugin::AlienBase::Wrapper {
 =head1 SYNOPSIS
 
  [AlienBase::Wrapper]
- alien = Alien::libfoo1
+ alien = Alien::libfoo1@1.24
  alien = Alien::libfoo2
 
 =head1 DESCRIPTION
 
 This L<Dist::Zilla> plugin adjusts the C<Makefile.PL> or C<Build.PL> in your C<XS> project to
 use L<Alien::Base::Wrapper> which allows you to use one or more L<Alien::Base> based L<Aliens>.
+
+=head1 PROPERTIES
+
+=head2 alien
+
+List of aliens that you want to use in your XS code.  You ca suffix this with a at-version
+to specify a minimum version requirement.  (Example C<Alien::Libarchive3@0.28>).
+
+=head1 SEE ALSO
+
+=over 4
+
+=item L<Alien::Base>
+
+=item L<Alien::Build::Manual::AlienUser>
+
+=back
 
 =cut
 
@@ -72,9 +89,10 @@ use L<Alien::Base::Wrapper> which allows you to use one or more L<Alien::Base> b
   {
     my($self) = @_;
 
+    my @aliens = map { s/\@.*$//r }  @{ $self->alien };
+
     if($self->_installer eq 'Makefile.PL')
     {
-      my @aliens = map { s/\@.*$//r }  @{ $self->alien };
       my $code = "use Alien::Base::Wrapper qw( @aliens !export );\n" .
                  "\%WriteMakefileArgs = (\%WriteMakefileArgs, Alien::Base::Wrapper->mm_args);\n";
     
@@ -90,6 +108,17 @@ use L<Alien::Base::Wrapper> which allows you to use one or more L<Alien::Base> b
     
     elsif($self->_installer eq 'Build.PL')
     {
+      my $code = "use Alien::Base::Wrapper qw( @aliens !export );\n" .
+                 "\%module_build_args = (\%module_build_args, Alien::Base::Wrapper->mb_args);\n";
+      
+      my $file = first { $_->name eq 'Build.PL' } @{ $self->zilla->files };
+      my $content = $file->content;
+      
+      my $ok = $content =~ s/(unless \( eval \{ Module::Build)/"$comment_begin$code$comment_end\n\n$1"/e;
+      $self->log_fatal('unable to find the correct location to insert prereqs')
+        unless $ok;      
+      
+      $file->content($content);
     }
     
 

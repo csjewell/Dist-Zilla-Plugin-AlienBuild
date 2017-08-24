@@ -13,5 +13,6 @@ pod_coverage:
   # for either Class or method.
   private:
     - Dist::Zilla::Plugin::AlienBase::Doc
+    - Dist::Zilla::Plugin::AlienBase::Wrapper
     - Dist::Zilla::Plugin::AlienBuild
 
