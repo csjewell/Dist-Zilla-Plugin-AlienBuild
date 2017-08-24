@@ -3,6 +3,8 @@ sub require_ok ($);
 
 require_ok 'Dist::Zilla::Plugin::AlienBuild';
 require_ok 'Dist::Zilla::Plugin::AlienBase::Doc';
+require_ok 'Dist::Zilla::Plugin::AlienBase::Wrapper';
+
 done_testing;
 
 sub require_ok ($)

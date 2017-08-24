@@ -1,0 +1,105 @@
+package Dist::Zilla::Plugin::AlienBase::Wrapper {
+
+  use 5.014;
+  use Moose;
+  use List::Util qw( first );
+
+  # ABSTRACT: Use aliens in your Makefile.PL or Build.PL
+  # VERSION
+
+=head1 SYNOPSIS
+
+ [AlienBase::Wrapper]
+ alien = Alien::libfoo1
+ alien = Alien::libfoo2
+
+=head1 DESCRIPTION
+
+This L<Dist::Zilla> plugin adjusts the C<Makefile.PL> or C<Build.PL> in your C<XS> project to
+use L<Alien::Base::Wrapper> which allows you to use one or more L<Alien::Base> based L<Aliens>.
+
+=cut
+
+  with 'Dist::Zilla::Role::FileMunger';
+  with 'Dist::Zilla::Role::PrereqSource';
+
+  has alien => (
+    is      => 'ro',
+    isa     => 'ArrayRef[Str]',
+    default => sub { [] },
+  );
+
+  has _installer => (
+    is      => 'ro',
+    lazy    => 1,
+    default => sub {
+      my($self) = @_;
+      my $name = first { /^(Build|Makefile)\.PL$/ } map { $_->name } @{ $self->zilla->files };
+      $self->log_fatal('Unable to find Makefile.PL or Build.PL') unless $name;
+      $name;
+    },
+  );
+
+  around mvp_multivalue_args => sub {
+    my($orig, $self) = @_;
+    ($self->$orig, 'alien');
+  };
+
+  my $comment_begin  = "# BEGIN code inserted by Dist::Zilla::Plugin::AlienBuild\n";
+  my $comment_end    = "# END code inserted by Dist::Zilla::Plugin::AlienBuild\n";
+
+  sub register_prereqs
+  {
+    my($self) = @_;
+
+    my $zilla = $self->zilla;
+
+    $zilla->register_prereqs({
+      phase => 'configure',
+    }, 'Alien::Base::Wrapper' => '1.02' );
+    
+    foreach my $spec (@{ $self->alien })
+    {
+      my ($alien, $version) = split /\@/, $spec;
+      $version //= "0";
+      $zilla->register_prereqs({
+        phase => 'configure',
+      }, $alien => $version);
+    }
+  }
+
+  sub munge_files
+  {
+    my($self) = @_;
+
+    if($self->_installer eq 'Makefile.PL')
+    {
+      my @aliens = map { s/\@.*$//r }  @{ $self->alien };
+      my $code = "use Alien::Base::Wrapper qw( @aliens !export );\n" .
+                 "\%WriteMakefileArgs = (\%WriteMakefileArgs, Alien::Base::Wrapper->mm_args);\n";
+    
+      my $file = first { $_->name eq 'Makefile.PL' } @{ $self->zilla->files };
+      my $content = $file->content;
+    
+      my $ok = $content =~ s/(unless \( eval \{ ExtUtils::MakeMaker)/"$comment_begin$code$comment_end\n\n$1"/e;
+      $self->log_fatal('unable to find the correct location to insert prereqs')
+        unless $ok;
+      
+      $file->content($content);
+    }
+    
+    elsif($self->_installer eq 'Build.PL')
+    {
+    }
+    
+
+    else
+    {
+      $self->log_fatal('unable to find Makefile.PL or Build.PL');
+    }
+  }
+
+  __PACKAGE__->meta->make_immutable;
+};
+
+1;

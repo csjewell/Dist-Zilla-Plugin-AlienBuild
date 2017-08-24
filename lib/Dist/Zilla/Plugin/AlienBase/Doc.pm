@@ -135,12 +135,7 @@ has see_also => (
 
 around mvp_multivalue_args => sub {
   my($orig, $self) = @_;
-  return ($self->$orig, 'type');
-};
-
-around mvp_multivalue_args => sub {
-  my($orig, $self) = @_;
-  return ($self->$orig, 'type', 'see_also');
+  ($self->$orig, 'type', 'see_also');
 };
     
 sub render_synopsis
