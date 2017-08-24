@@ -1,11 +1,10 @@
-package Dist::Zilla::Plugin::AlienBase::Doc;
+package Dist::Zilla::Plugin::AlienBase::Doc {
 
 use 5.014;
 use Moose;
 use Carp ();
 
 # ABSTRACT: Generate boilerplate documentation for Alien::Base subclass
-# VERSION
 
 =head1 SYNOPSIS
 
@@ -265,6 +264,10 @@ sub munge_file
 }
 
 __PACKAGE__->meta->make_immutable;
+
+}
+
+package Dist::Zilla::Plugin::AlienBase::Doc;
 
 1;
 

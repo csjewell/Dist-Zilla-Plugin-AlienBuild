@@ -1,4 +1,4 @@
-package Dist::Zilla::Plugin::AlienBuild;
+package Dist::Zilla::Plugin::AlienBuild {
 
 use 5.014;
 use Moose;
@@ -258,5 +258,7 @@ sub metadata {
 }
 
 __PACKAGE__->meta->make_immutable;
+
+}
 
 1;

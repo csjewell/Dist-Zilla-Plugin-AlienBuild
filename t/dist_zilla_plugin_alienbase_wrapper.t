@@ -63,7 +63,6 @@ subtest 'eumm' => sub {
           @args_import = @_;
         },
         mm_args => sub {
-          diag "here";
           @args_mm_args = @_;
           ( foo => 'bar' );
         },
@@ -122,7 +121,6 @@ subtest 'mb' => sub {
           @args_import = @_;
         },
         mb_args => sub {
-          diag "here";
           @args_mb_args = @_;
           ( foo => 'bar' );
         },
