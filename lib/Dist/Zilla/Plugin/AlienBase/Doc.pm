@@ -1,10 +1,10 @@
 package Dist::Zilla::Plugin::AlienBase::Doc {
 
-use 5.014;
-use Moose;
-use Carp ();
+  use 5.014;
+  use Moose;
+  use Carp ();
 
-# ABSTRACT: Generate boilerplate documentation for Alien::Base subclass
+  # ABSTRACT: Generate boilerplate documentation for Alien::Base subclass
 
 =head1 SYNOPSIS
 
@@ -40,14 +40,14 @@ least, better than nothing though!
 
 =cut
 
-with 'Dist::Zilla::Role::FileMunger';
-with 'Dist::Zilla::Role::FileFinderUser' => { default_finders => [ ':InstallModules', ':ExecFiles' ] };
-with 'Dist::Zilla::Role::PPI';
-with 'Dist::Zilla::Role::TextTemplate';
+  with 'Dist::Zilla::Role::FileMunger';
+  with 'Dist::Zilla::Role::FileFinderUser' => { default_finders => [ ':InstallModules', ':ExecFiles' ] };
+  with 'Dist::Zilla::Role::PPI';
+  with 'Dist::Zilla::Role::TextTemplate';
 
-use Sub::Exporter::ForMethods 'method_installer';
-use Data::Section 0.004 # fixed header_re
-    { installer => method_installer }, '-setup';
+  use Sub::Exporter::ForMethods 'method_installer';
+  use Data::Section 0.004 # fixed header_re
+      { installer => method_installer }, '-setup';
 
 =head1 ATTRIBUTES
 
@@ -58,17 +58,17 @@ distribution's main module.
 
 =cut
 
-has class_name => (
-  is      => 'ro',
-  isa     => 'Str',
-  lazy    => 1,
-  default => sub {
-    my($self) = @_;
-    my $name = $self->zilla->name;
-    $name =~ s{-}{::};
-    $name;
-  },
-);
+  has class_name => (
+    is      => 'ro',
+    isa     => 'Str',
+    lazy    => 1,
+    default => sub {
+      my($self) = @_;
+      my $name = $self->zilla->name;
+      $name =~ s{-}{::};
+      $name;
+    },
+  );
 
 =head2 min_version
 
@@ -76,11 +76,11 @@ The minimum version to suggest using as a prereq.
 
 =cut
 
-has min_version => (
-  is      => 'ro',
-  isa     => 'Str',
-  default => '0',
-);
+  has min_version => (
+    is      => 'ro',
+    isa     => 'Str',
+    default => '0',
+  );
 
 =head2 type
 
@@ -98,17 +98,17 @@ Types of the L<Alien>.  This can be specified multiple times.  Valid types:
 
 =cut
 
-has type => (
-  is      => 'ro',
-  isa     => 'ArrayRef[Str]',
-  default => sub { [ 'library' ] },
-);
+  has type => (
+    is      => 'ro',
+    isa     => 'ArrayRef[Str]',
+    default => sub { [ 'library' ] },
+  );
 
-has name => (
-  is => 'ro',
-  isa => 'Str',
-  required => 1,
-);
+  has name => (
+    is => 'ro',
+    isa => 'Str',
+    required => 1,
+  );
 
 =head2 see_also
 
@@ -126,144 +126,144 @@ List of modules to refer to in the C<SEE ALSO> section.  By default this is
 
 =cut
 
-has see_also => (
-  is      => 'ro',
-  isa     => 'ArrayRef[Str]',
-  default => sub { [ 'Alien', 'Alien::Base', 'Alien::Build::Manual::AlienUser' ] },
-);
+  has see_also => (
+    is      => 'ro',
+    isa     => 'ArrayRef[Str]',
+    default => sub { [ 'Alien', 'Alien::Base', 'Alien::Build::Manual::AlienUser' ] },
+  );
 
-around mvp_multivalue_args => sub {
-  my($orig, $self) = @_;
-  ($self->$orig, 'type', 'see_also');
-};
+  around mvp_multivalue_args => sub {
+    my($orig, $self) = @_;
+    ($self->$orig, 'type', 'see_also');
+  };
     
-sub render_synopsis
-{
-  my($self) = @_;
-  
-  my $str = "\n=head1 SYNOPSIS";
-  
-  foreach my $type (@{ $self->type })
+  sub render_synopsis
   {
-    my $template;
+    my($self) = @_;
   
-    if($type eq 'library')
+    my $str = "\n=head1 SYNOPSIS";
+  
+    foreach my $type (@{ $self->type })
     {
-      $template = $self->section_data('__SYNOPSIS_LIBRARY__')
-    }
-    elsif($type eq 'tool')
-    {
-      $template = $self->section_data('__SYNOPSIS_TOOL__')
-    }
-    elsif($type eq 'ffi')
-    {
-      $template = $self->section_data('__SYNOPSIS_FFI__')
-    }
-    else
-    {
-      Carp::croak("unknown type: $type");
-    }
+      my $template;
+  
+      if($type eq 'library')
+      {
+        $template = $self->section_data('__SYNOPSIS_LIBRARY__')
+      }
+      elsif($type eq 'tool')
+      {
+        $template = $self->section_data('__SYNOPSIS_TOOL__')
+      }
+      elsif($type eq 'ffi')
+      {
+        $template = $self->section_data('__SYNOPSIS_FFI__')
+      }
+      else
+      {
+        Carp::croak("unknown type: $type");
+      }
     
+      $template = $$template;
+      $template =~ s{\s*$}{};
+    
+      $str .= "\n\n";
+      $str .= $self->fill_in_string($template, {
+        class      => $self->class_name,
+        name       => $self->name,
+        version    => $self->min_version,
+        optversion => $self->min_version ? " @{[ $self->min_version ]}" : '',
+      });
+    }
+  
+    $str .= "\n\n=cut\n\n";
+  
+    $str;
+  }
+
+  sub render_description
+  {
+    my($self) = @_;
+  
+    my $template = $self->section_data('__DESCRIPTION__');
+  
     $template = $$template;
     $template =~ s{\s*$}{};
-    
-    $str .= "\n\n";
+  
+    my $str = "\n";
+  
     $str .= $self->fill_in_string($template, {
       class      => $self->class_name,
       name       => $self->name,
       version    => $self->min_version,
       optversion => $self->min_version ? " @{[ $self->min_version ]}" : '',
     });
+  
+    $str .= "\n\n";
+  
+    $str;
   }
-  
-  $str .= "\n\n=cut\n\n";
-  
-  $str;
-}
 
-sub render_description
-{
-  my($self) = @_;
-  
-  my $template = $self->section_data('__DESCRIPTION__');
-  
-  $template = $$template;
-  $template =~ s{\s*$}{};
-  
-  my $str = "\n";
-  
-  $str .= $self->fill_in_string($template, {
-    class      => $self->class_name,
-    name       => $self->name,
-    version    => $self->min_version,
-    optversion => $self->min_version ? " @{[ $self->min_version ]}" : '',
-  });
-  
-  $str .= "\n\n";
-  
-  $str;
-}
-
-sub render_see_also
-{
-  my($self) = @_;
-  
-  my $str = "\n=head1 SEE ALSO\n\n";  
-  $str .= join ', ', map { "L<$_>" } @{ $self->see_also };
-  $str .= "\n\n=cut\n\n";
-  
-  $str;
-}
-
-sub munge_files
-{
-  my($self) = @_;
-  $self->munge_file($_) for @{ $self->found_files };
-  return;
-}
-
-sub munge_file
-{
-  my($self, $file) = @_;
-  
-  my $doc = $self->ppi_document_for_file($file);
-  
-  return unless defined $doc;
-  
-  my $comments = $doc->find('PPI::Token::Comment');
-  my $modified = 0;
-  
-  foreach my $comment (@{ $comments || [] })
+  sub render_see_also
   {
-    if($comment =~ /^\s*##?\s*ALIEN (SYNOPSIS|DESCRIPTION|SEE ALSO)\s*$/)
+    my($self) = @_;
+  
+    my $str = "\n=head1 SEE ALSO\n\n";  
+    $str .= join ', ', map { "L<$_>" } @{ $self->see_also };
+    $str .= "\n\n=cut\n\n";
+  
+    $str;
+  }
+
+  sub munge_files
+  {
+    my($self) = @_;
+    $self->munge_file($_) for @{ $self->found_files };
+    return;
+  }
+
+  sub munge_file
+  {
+    my($self, $file) = @_;
+  
+    my $doc = $self->ppi_document_for_file($file);
+  
+    return unless defined $doc;
+  
+    my $comments = $doc->find('PPI::Token::Comment');
+    my $modified = 0;
+  
+    foreach my $comment (@{ $comments || [] })
     {
-      my $type = $1;
-      if($type eq 'SYNOPSIS')
+      if($comment =~ /^\s*##?\s*ALIEN (SYNOPSIS|DESCRIPTION|SEE ALSO)\s*$/)
       {
-        $comment->set_content($self->render_synopsis);
+        my $type = $1;
+        if($type eq 'SYNOPSIS')
+        {
+          $comment->set_content($self->render_synopsis);
+        }
+        elsif($type eq 'DESCRIPTION')
+        {
+          $comment->set_content($self->render_description);
+        }
+        elsif($type eq 'SEE ALSO')
+        {
+          $comment->set_content($self->render_see_also);
+        }
+        $modified = 1;
       }
-      elsif($type eq 'DESCRIPTION')
-      {
-        $comment->set_content($self->render_description);
-      }
-      elsif($type eq 'SEE ALSO')
-      {
-        $comment->set_content($self->render_see_also);
-      }
-      $modified = 1;
     }
-  }
   
-  if($modified)
-  {
-    $self->save_ppi_document_to_file( $doc, $file);
-    $self->log_debug([ 'adding ALIEN documentation to %s', $file->name ]);
-  }
+    if($modified)
+    {
+      $self->save_ppi_document_to_file( $doc, $file);
+      $self->log_debug([ 'adding ALIEN documentation to %s', $file->name ]);
+    }
   
-  return;
-}
+    return;
+  }
 
-__PACKAGE__->meta->make_immutable;
+  __PACKAGE__->meta->make_immutable;
 
 }
 
