@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - Add [AlienBase::Wrapper::Bundle] plugin
 
 0.24      2017-08-24 16:14:03 -0400
   - Add [AlienBase::Wrapper] plugin

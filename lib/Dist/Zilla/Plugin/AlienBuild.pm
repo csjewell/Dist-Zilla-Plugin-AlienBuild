@@ -70,9 +70,9 @@ L<Dist::Zilla::Plugin::AlienBase::Doc>
 
 =cut
 
-  with 'Dist::Zilla::Role::FileMunger';
-  with 'Dist::Zilla::Role::MetaProvider';
-  with 'Dist::Zilla::Role::PrereqSource';
+  with 'Dist::Zilla::Role::FileMunger',
+       'Dist::Zilla::Role::MetaProvider',
+       'Dist::Zilla::Role::PrereqSource';
 
   has alienfile_meta => (
     is      => 'ro',

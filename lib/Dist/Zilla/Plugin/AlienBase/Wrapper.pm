@@ -37,8 +37,8 @@ to specify a minimum version requirement.  (Example C<Alien::Libarchive3@0.28>).
 
 =cut
 
-  with 'Dist::Zilla::Role::FileMunger';
-  with 'Dist::Zilla::Role::PrereqSource';
+  with 'Dist::Zilla::Role::FileMunger',
+       'Dist::Zilla::Role::PrereqSource';
 
   has alien => (
     is      => 'ro',
