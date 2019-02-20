@@ -1,4 +1,4 @@
-# Dist::Zilla::Plugin::AlienBuild [![Build Status](https://secure.travis-ci.org/plicease/Dist-Zilla-Plugin-AlienBuild.png)](http://travis-ci.org/plicease/Dist-Zilla-Plugin-AlienBuild)
+# Dist::Zilla::Plugin::AlienBuild [![Build Status](https://secure.travis-ci.org/Perl5-Alien/Dist-Zilla-Plugin-AlienBuild.png)](http://travis-ci.org/Perl5-Alien/Dist-Zilla-Plugin-AlienBuild)
 
 Use Alien::Build with Dist::Zilla
 
