@@ -82,12 +82,24 @@ C<inc/Alien/Base/Wrapper.pm>.
       $self->log_fatal("requires Alien::Base::Wrapper 1.28, but we have @{[ Alien::Base::Wrapper->VERSION ]}");
     }
 
-    my $file = Dist::Zilla::File::InMemory->new({
-      name    => $self->filename,
-      content => Path::Tiny->new($INC{'Alien/Base/Wrapper.pm'})->slurp_utf8,
-    });
+    my $content = Path::Tiny->new($INC{'Alien/Base/Wrapper.pm'})->slurp_utf8;
 
-    $self->add_file($file);
+    my $file;
+
+    $file = List::Util::first { $_->name eq $self->filename } @{ $self->zilla->files };
+
+    if($file)
+    {
+      $file->content($content);
+    }
+    else
+    {
+      $file = Dist::Zilla::File::InMemory->new({
+        name    => $self->filename,
+        content => $content,
+      });
+      $self->add_file($file);
+    }
   }
 
   my $comment_begin  = "# BEGIN code inserted by @{[ __PACKAGE__ ]}\n";
