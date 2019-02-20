@@ -74,7 +74,7 @@ to specify a minimum version requirement.  (Example C<Alien::Libarchive3@0.28>).
     $zilla->register_prereqs({
       phase => 'configure',
     }, 'Alien::Base::Wrapper' => '1.02' );
-    
+
     foreach my $spec (@{ $self->alien })
     {
       my ($alien, $version) = split /\@/, $spec;
@@ -95,33 +95,31 @@ to specify a minimum version requirement.  (Example C<Alien::Libarchive3@0.28>).
     {
       my $code = "use Alien::Base::Wrapper qw( @aliens !export );\n" .
                  "\%WriteMakefileArgs = (\%WriteMakefileArgs, Alien::Base::Wrapper->mm_args);\n";
-    
+
       my $file = first { $_->name eq 'Makefile.PL' } @{ $self->zilla->files };
       my $content = $file->content;
-    
+
       my $ok = $content =~ s/(unless \( eval \{ ExtUtils::MakeMaker)/"$comment_begin$code$comment_end\n\n$1"/e;
       $self->log_fatal('unable to find the correct location to insert prereqs')
         unless $ok;
-      
+
       $file->content($content);
     }
-    
+
     elsif($self->_installer eq 'Build.PL')
     {
       my $code = "use Alien::Base::Wrapper qw( @aliens !export );\n" .
                  "\%module_build_args = (\%module_build_args, Alien::Base::Wrapper->mb_args);\n";
-      
+
       my $file = first { $_->name eq 'Build.PL' } @{ $self->zilla->files };
       my $content = $file->content;
-      
+
       my $ok = $content =~ s/(unless \( eval \{ Module::Build)/"$comment_begin$code$comment_end\n\n$1"/e;
       $self->log_fatal('unable to find the correct location to insert prereqs')
-        unless $ok;      
-      
+        unless $ok;
+
       $file->content($content);
     }
-    
-
     else
     {
       $self->log_fatal('unable to find Makefile.PL or Build.PL');

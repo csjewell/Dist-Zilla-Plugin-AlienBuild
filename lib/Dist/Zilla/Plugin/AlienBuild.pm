@@ -167,7 +167,7 @@ L<Dist::Zilla::Plugin::AlienBase::Doc>
       'Alien::Build' => $ab_version,
       %{ $build->requires('configure') },
     );
-    
+
     # Build requires...
     $self->zilla->register_prereqs(
       { phase => 'build' },
@@ -199,16 +199,16 @@ EOF2
     {
       my $file = first { $_->name eq 'Makefile.PL' } @{ $self->zilla->files };
       my $content = $file->content;
- 
+
       my $ok = $content =~ s/(unless \( eval \{ ExtUtils::MakeMaker)/"$comment_begin$mm_code_prereqs$comment_end\n\n$1"/e;
       $self->log_fatal('unable to find the correct location to insert prereqs')
         unless $ok;
-    
+
       $content .= "\n\n$comment_begin$mm_code_postamble$comment_end\n";
-    
+
       $file->content($content);
     }
-  
+
     elsif($self->_installer eq 'Build.PL')
     {
       my $plugin = first { $_->isa('Dist::Zilla::Plugin::ModuleBuild') } @{ $self->zilla->plugins };
@@ -230,7 +230,7 @@ EOF2
         }
       }
     }
-  
+
     else
     {
       $self->log_fatal('unable to find Makefile.PL or Build.PL');
