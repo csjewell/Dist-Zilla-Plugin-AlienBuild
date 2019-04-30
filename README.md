@@ -53,6 +53,10 @@ actually be different.
 
 This is on by default.  You can turn this off by setting this property to `0`.
 
+## clean\_install
+
+Sets the clean\_install property on [Alien::Build::MM](https://metacpan.org/pod/Alien::Build::MM).
+
 # SEE ALSO
 
 [Alien::Build](https://metacpan.org/pod/Alien::Build), [alienfile](https://metacpan.org/pod/alienfile), [Alien::Base](https://metacpan.org/pod/Alien::Base), [Alien::Build::MM](https://metacpan.org/pod/Alien::Build::MM), [Alien::Build::MB](https://metacpan.org/pod/Alien::Build::MB),

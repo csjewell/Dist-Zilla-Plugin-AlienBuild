@@ -5,6 +5,7 @@ package Dist::Zilla::Plugin::AlienBuild {
   use List::Util qw( first );
   use Path::Tiny qw( path );
   use Capture::Tiny qw( capture );
+  use Data::Dumper ();
 
   # ABSTRACT: Use Alien::Build with Dist::Zilla
 
@@ -63,6 +64,10 @@ actually be different.
 
 This is on by default.  You can turn this off by setting this property to C<0>.
 
+=head2 clean_install
+
+Sets the clean_install property on L<Alien::Build::MM>.
+
 =head1 SEE ALSO
 
 L<Alien::Build>, L<alienfile>, L<Alien::Base>, L<Alien::Build::MM>, L<Alien::Build::MB>,
@@ -78,6 +83,12 @@ L<Dist::Zilla::Plugin::AlienBase::Doc>
     is      => 'ro',
     isa     => 'Int',
     default => 1,
+  );
+
+  has clean_install => (
+    is      => 'ro',
+    isa     => 'Int',
+    default => 0,
   );
 
   has _installer => (
@@ -117,6 +128,14 @@ L<Dist::Zilla::Plugin::AlienBase::Doc>
     my($self) = @_;
 
     my $prereqs = $self->zilla->prereqs->as_string_hash;
+
+    if($self->clean_install)
+    {
+      $self->zilla->register_prereqs({
+        phase => 'configure',
+        type  => 'requires',
+      }, 'Alien::Build::MM' => '1.71');
+    }
 
     foreach my $phase (keys %$prereqs)
     {
@@ -176,15 +195,16 @@ L<Dist::Zilla::Plugin::AlienBase::Doc>
     );
   }
 
-  my $mm_code_prereqs = <<'EOF1';
-use Alien::Build::MM;
-my $abmm = Alien::Build::MM->new;
-%WriteMakefileArgs = $abmm->mm_args(%WriteMakefileArgs);
-EOF1
-
   my $mm_code_postamble = <<'EOF2';
-sub MY::postamble {
-  $abmm->mm_postamble;
+{ package MY;
+  sub postamble {
+    $abmm->mm_postamble(@_);
+  }
+  sub install {
+    $abmm->can('mm_install')
+      ? $abmm->mm_install(@_)
+      : shift->SUPER::install(@_);
+  }
 }
 EOF2
 
@@ -197,6 +217,24 @@ EOF2
 
     if($self->_installer eq 'Makefile.PL')
     {
+
+      my $mm_code_prereqs = do {
+
+        my %prop;
+        $prop{clean_install} = 1 if $self->clean_install;
+
+        # this is overkill atm, but may be useful as we add other properties
+        my $prop = %prop
+          ? Data::Dumper->new([{ clean_install => 1 }])->Terse(1)->Indent(0)->Dump =~ s/^\{//r =~ s/\}$//r
+          : '';
+
+        <<"EOF1";
+use Alien::Build::MM;
+my \$abmm = Alien::Build::MM->new@{[ $prop ? "($prop)" : '' ]};
+\%WriteMakefileArgs = \$abmm->mm_args(\%WriteMakefileArgs);
+EOF1
+      };
+
       my $file = first { $_->name eq 'Makefile.PL' } @{ $self->zilla->files };
       my $content = $file->content;
 
