@@ -196,7 +196,8 @@ L<Dist::Zilla::Plugin::AlienBase::Doc>
   }
 
   my $mm_code_postamble = <<'EOF2';
-{ package MY;
+{ package
+    MY;
   sub postamble {
     $abmm->mm_postamble(@_);
   }
