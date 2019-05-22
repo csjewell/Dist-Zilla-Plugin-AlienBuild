@@ -134,7 +134,7 @@ L<Dist::Zilla::Plugin::AlienBase::Doc>
       $self->zilla->register_prereqs({
         phase => 'configure',
         type  => 'requires',
-      }, 'Alien::Build::MM' => '1.71');
+      }, 'Alien::Build::MM' => '1.74');
     }
 
     foreach my $phase (keys %$prereqs)

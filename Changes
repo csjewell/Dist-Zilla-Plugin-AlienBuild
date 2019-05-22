@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - bump requirement for clean_install to AB 1.74 to avoid
+    bug in 1.73.
 
 0.28      2019-04-30 20:29:25 -0400
   - Fixed unauthorized use of MY in PAUSE permissions.
