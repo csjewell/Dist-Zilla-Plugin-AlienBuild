@@ -18,7 +18,7 @@ package Dist::Zilla::Plugin::AlienBase::Wrapper::Bundle {
  
  system       = | # use libfoo!
  system       = | $WriteMakefileArgs{LIBS} = [ '-lfoo' ];
-
+ 
  alien        = Alien::libfoo
 
 =head1 DESCRIPTION

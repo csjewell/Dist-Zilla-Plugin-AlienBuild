@@ -278,7 +278,7 @@ In your Makefile.PL:
 
  use ExtUtils::MakeMaker;
  use Alien::Base::Wrapper ();
- 
+
  WriteMakefile(
    Alien::Base::Wrapper->new('{{ $class }}')->mm_args2(
      # MakeMaker args
@@ -301,7 +301,7 @@ In your Build.PL:
    Alien::Base::Wrapper->mb_args,
    ...
  );
- 
+
  $build->create_build_script;
 
 __[ __SYNOPSIS_FFI__ ]__
@@ -309,7 +309,7 @@ In your L<FFI::Platypus> script or module:
 
  use FFI::Platypus;
  use {{ $class }}{{ $optversion }};
- 
+
  my $ffi = FFI::Platypus->new(
    lib => [ {{ $class }}->dynamic_libs ],
  );
@@ -319,7 +319,7 @@ In your script or module:
 
  use {{ $class }}{{ $optversion }};
  use Env qw( @PATH );
- 
+
  unshift @PATH, {{ $class }}->bin_dir;
 
 __[ __DESCRIPTION__ ]__
