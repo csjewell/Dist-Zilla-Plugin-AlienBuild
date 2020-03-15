@@ -4,7 +4,9 @@ Use Alien::Build with Dist::Zilla
 
 # SYNOPSIS
 
-    [AlienBuild]
+```
+[AlienBuild]
+```
 
 # DESCRIPTION
 
