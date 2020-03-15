@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.30      2020-03-15 03:00:26 -0600
   - [AlienBase::Doc] uses Alien::Base::Wrapper instead of manual
     intervention.
 
