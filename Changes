@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - Remove reference to Kafka::Librd from synopsis
 
 0.30      2020-03-15 03:00:26 -0600
   - [AlienBase::Doc] uses Alien::Base::Wrapper instead of manual

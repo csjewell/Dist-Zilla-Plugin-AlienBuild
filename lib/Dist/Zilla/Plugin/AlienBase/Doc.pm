@@ -282,7 +282,7 @@ In your Makefile.PL:
  WriteMakefile(
    Alien::Base::Wrapper->new('{{ $class }}')->mm_args2(
      # MakeMaker args
-     NAME => 'Kafka::Librd',
+     NAME => 'My::XS',
      ...
    ),
  );
