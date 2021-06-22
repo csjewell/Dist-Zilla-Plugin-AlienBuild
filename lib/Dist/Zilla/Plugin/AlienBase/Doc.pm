@@ -104,6 +104,14 @@ Types of the L<Alien>.  This can be specified multiple times.  Valid types:
     default => sub { [ 'library' ] },
   );
 
+=head2 name
+
+[required]
+
+The name of the alienized project.  For example C<libarchive> or C<infozip>.
+
+=cut
+
   has name => (
     is => 'ro',
     isa => 'Str',

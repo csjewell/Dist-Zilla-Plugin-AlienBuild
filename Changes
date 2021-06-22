@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - Document required (!) name property for [AlienBase::Doc]
 
 0.31      2020-05-15 06:55:50 -0600
   - Remove reference to Kafka::Librd from synopsis
