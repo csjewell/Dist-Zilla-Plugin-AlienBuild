@@ -282,12 +282,12 @@ EOF2
           : '';
 
         my $var  = $self->eumm_hash_var;
-	my $call = "\$abmm->mm_args($var)";
-	if ($var =~ /^[\$]/) {
-	  $call = "{ \$abmm->mm_args(\%$var) }";
-	} elsif ($var !~ /^[\%]/) {
+        my $call = "\$abmm->mm_args($var)";
+        if ($var =~ /^[\$]/) {
+          $call = "{ \$abmm->mm_args(\%$var) }";
+        } elsif ($var !~ /^[\%]/) {
           $self->log_fatal('eumm_hash_var has to start with % or $');
-	}
+        }
 
         <<"EOF1";
 use Alien::Build::MM;
@@ -306,7 +306,7 @@ EOF1
         $ok = $content =~ s/# ALIEN BUILD MM/"$comment_begin$mm_code_prereqs$comment_end\n\n"/e;
       }
       if (!$ok) {
-	# Insert at the point 0.32 would insert at.
+        # Insert at the point 0.32 would insert at.
         $ok = $content =~ s/(unless \( eval \{ ExtUtils::MakeMaker)/"$comment_begin$mm_code_prereqs$comment_end\n\n$1"/e;
       }
       $self->log_fatal('unable to find the correct location to insert prereqs')
