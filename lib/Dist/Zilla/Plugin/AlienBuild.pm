@@ -68,6 +68,44 @@ This is on by default.  You can turn this off by setting this property to C<0>.
 
 Sets the clean_install property on L<Alien::Build::MM>.
 
+=head2 eumm_hash_var
+
+Sets the variable name that is used in the Makefile.PL for its arguments.
+Defaults to C<%WriteMakefileArgs>, and is required to begin with C<%> or C<$>.
+This is useful when defining your own Makefile template with L<Dist::Zilla::Plugin::MakeMaker::Custom>.
+
+=head1 NOTES
+
+When defining your own Makefile.PL template (to use with
+Dist::Zilla::Plugin::MakeMaker::Custom, for example,) you can specify
+where you want this module to insert its code by having this line
+in the template:
+
+  # ALIEN BUILD MM
+
+An example template to use would be this:
+
+  use ExtUtils::MakeMaker ##{ $eumm_version ##};
+  
+  my %args = (
+    NAME => "My::Alien::Module",
+  ##{ $plugin->get_default(qw(ABSTRACT AUTHOR LICENSE VERSION)) ##}
+  ##{ $plugin->get_prereqs(1) ##}
+  );
+  
+  # ALIEN BUILD MM
+  
+  WriteMakefile(%args);
+
+and a dist.ini using this template would include this:
+
+  [MakeMaker::Custom]
+  # We need to manipulate %args on-the-fly if we set the version of ExtUtils::MakeMaker any lower.
+  eumm_version: 6.64
+
+  [AlienBuild]
+  eumm_hash_var: %args
+
 =head1 SEE ALSO
 
 L<Alien::Build>, L<alienfile>, L<Alien::Base>, L<Alien::Build::MM>, L<Alien::Build::MB>,
@@ -89,6 +127,12 @@ L<Dist::Zilla::Plugin::AlienBase::Doc>
     is      => 'ro',
     isa     => 'Int',
     default => 0,
+  );
+
+  has eumm_hash_var => (
+    is      => 'ro',
+    isa     => 'Str',
+    default => '%WriteMakefileArgs',
   );
 
   has _installer => (
@@ -166,10 +210,16 @@ L<Dist::Zilla::Plugin::AlienBase::Doc>
 
     if($self->_installer eq 'Makefile.PL')
     {
+      my $prereqs = $self->zilla->prereqs;
+      my $eumm_version = $prereqs->requirements_for(qw(build requires))
+        ->clone
+        ->add_requirements($prereqs->requirements_for(qw(configure requires)))
+        ->as_string_hash->{'ExtUtils::MakeMaker'} // 0;
+      $eumm_version = '6.52' if $eumm_version < '6.52';
       $self->zilla->register_prereqs(
         { phase => $_ },
         'Alien::Build::MM' => $ab_version,
-        'ExtUtils::MakeMaker' => '6.52',
+        'ExtUtils::MakeMaker' => $eumm_version,
       ) for qw( configure build );
     }
     else
@@ -211,6 +261,8 @@ EOF2
 
   my $comment_begin  = "# BEGIN code inserted by @{[ __PACKAGE__ ]}\n";
   my $comment_end    = "# END code inserted by @{[ __PACKAGE__ ]}\n";
+  my $postamble_begin  = "# BEGIN postamble code inserted by @{[ __PACKAGE__ ]}\n";
+  my $postamble_end    = "# END postamble code inserted by @{[ __PACKAGE__ ]}\n";
 
   sub munge_files
   {
@@ -229,21 +281,39 @@ EOF2
           ? Data::Dumper->new([{ clean_install => 1 }])->Terse(1)->Indent(0)->Dump =~ s/^\{//r =~ s/\}$//r
           : '';
 
+        my $var  = $self->eumm_hash_var;
+	my $call = "\$abmm->mm_args($var)";
+	if ($var =~ /^[\$]/) {
+	  $call = "{ \$abmm->mm_args(\%$var) }";
+	} elsif ($var !~ /^[\%]/) {
+          $self->log_fatal('eumm_hash_var has to start with % or $');
+	}
+
         <<"EOF1";
 use Alien::Build::MM;
 my \$abmm = Alien::Build::MM->new@{[ $prop ? "($prop)" : '' ]};
-\%WriteMakefileArgs = \$abmm->mm_args(\%WriteMakefileArgs);
+$var = $call;
 EOF1
       };
 
       my $file = first { $_->name eq 'Makefile.PL' } @{ $self->zilla->files };
       my $content = $file->content;
 
-      my $ok = $content =~ s/(unless \( eval \{ ExtUtils::MakeMaker)/"$comment_begin$mm_code_prereqs$comment_end\n\n$1"/e;
+      # Reinsert if already inserted.
+      my $ok = $content =~ s/\Q$comment_begin\E(.*)\Q$comment_end\E/"$comment_begin$mm_code_prereqs$comment_end"/se;
+      if (!$ok) {
+        # Insert at new point.
+        $ok = $content =~ s/# ALIEN BUILD MM/"$comment_begin$mm_code_prereqs$comment_end\n\n"/e;
+      }
+      if (!$ok) {
+	# Insert at the point 0.32 would insert at.
+        $ok = $content =~ s/(unless \( eval \{ ExtUtils::MakeMaker)/"$comment_begin$mm_code_prereqs$comment_end\n\n$1"/e;
+      }
       $self->log_fatal('unable to find the correct location to insert prereqs')
         unless $ok;
 
-      $content .= "\n\n$comment_begin$mm_code_postamble$comment_end\n";
+      $content .= "\n\n$postamble_begin$mm_code_postamble$postamble_end\n"
+        unless $content =~ /\Q$postamble_begin\E/;
 
       $file->content($content);
     }
@@ -300,3 +370,4 @@ EOF1
 }
 
 1;
+
